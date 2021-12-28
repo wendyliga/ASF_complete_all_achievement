@@ -2,7 +2,7 @@ import Foundation
 
 enum Task {
   // timer to handle all task
-  static var timer = Timer()
+  static var timer = Timer(fire: Date(), interval: 1, repeats: false, block: {_ in})
   
   static func completeAllAchievement(
     ipcServer: String,

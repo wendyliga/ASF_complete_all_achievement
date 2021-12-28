@@ -1,6 +1,10 @@
 import Foundation
 import XMLCoder
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 enum Steam {
   private static func getGameListUrl(for steamId: String) -> URL? {
     URL(string: "https://steamcommunity.com/profiles/\(steamId)/games?tab=all&xml=1")

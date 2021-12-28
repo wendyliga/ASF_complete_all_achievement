@@ -1,5 +1,9 @@
 import Foundation
 
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
+
 struct ASF {
   internal let ipcServer: String
   internal let ipcPassword: String?
