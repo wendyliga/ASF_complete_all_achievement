@@ -1,5 +1,11 @@
 import Foundation
 
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin
+#endif
+
 enum Task {
   // timer to handle all task
   static var timer = Timer(fire: Date(), interval: 1, repeats: false, block: {_ in})
@@ -10,7 +16,14 @@ enum Task {
     ipcPort: Int,
     botName: String
   ) {
-    let startTime = CFAbsoluteTimeGetCurrent()
+    let startTime = {
+      #if os(Linux)
+      return clock_gettime_nsec_np(CLOCK_MONOTONIC)
+      #else
+      return CFAbsoluteTimeGetCurrent()
+      #endif
+    }()
+    
     let groupDispatch = DispatchGroup()
     var steamId: String?
     var gameList: Steam.GamesList?
@@ -77,8 +90,24 @@ enum Task {
     groupDispatch.leave()
     
     // calculating elapsed time
-    let finishTime = CFAbsoluteTimeGetCurrent()
-    let elapsedTime = String(format: "%.2f", finishTime-startTime)
-    print("Finish executing \(gameList!.games.game.count) games in \(elapsedTime) seconds.")
+    let finishTime = {
+      #if os(Linux)
+      return clock_gettime_nsec_np(CLOCK_MONOTONIC)
+      #else
+      return CFAbsoluteTimeGetCurrent()
+      #endif
+    }()
+    
+    print()
+    
+    let elapsedTime = {
+      #if os(Linux)
+      return (finishTime-startTime)/1000000000 // clock_gettime_nsec_np record time in nano second
+      #else
+      return finishTime-startTime // record CFAbsoluteTimeGetCurrent time in second
+      #endif
+    }()
+    
+    print("Finish executing \(gameList!.games.game.count) games in \(String(format: "%.2f", elapsedTime)) seconds.")
   }
 }
