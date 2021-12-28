@@ -16,13 +16,13 @@ enum Task {
     ipcPort: Int,
     botName: String
   ) {
-    let startTime = {
-      #if os(Linux)
-      return clock_gettime_nsec_np(CLOCK_MONOTONIC)
-      #else
-      return CFAbsoluteTimeGetCurrent()
-      #endif
-    }()
+//    let startTime = {
+//      #if os(Linux)
+//      return clock_gettime_nsec_np(CLOCK_MONOTONIC)
+//      #else
+//      return CFAbsoluteTimeGetCurrent()
+//      #endif
+//    }()
     
     let groupDispatch = DispatchGroup()
     var steamId: String?
@@ -90,24 +90,24 @@ enum Task {
     groupDispatch.leave()
     
     // calculating elapsed time
-    let finishTime = {
-      #if os(Linux)
-      return clock_gettime_nsec_np(CLOCK_MONOTONIC)
-      #else
-      return CFAbsoluteTimeGetCurrent()
-      #endif
-    }()
+//    let finishTime = {
+//      #if os(Linux)
+//      return clock_gettime_nsec_np(CLOCK_MONOTONIC)
+//      #else
+//      return CFAbsoluteTimeGetCurrent()
+//      #endif
+//    }()
+//
+//    print()
+//
+//    let elapsedTime = {
+//      #if os(Linux)
+//      return (finishTime-startTime)/1000000000 // clock_gettime_nsec_np record time in nano second
+//      #else
+//      return finishTime-startTime // record CFAbsoluteTimeGetCurrent time in second
+//      #endif
+//    }()
     
-    print()
-    
-    let elapsedTime = {
-      #if os(Linux)
-      return (finishTime-startTime)/1000000000 // clock_gettime_nsec_np record time in nano second
-      #else
-      return finishTime-startTime // record CFAbsoluteTimeGetCurrent time in second
-      #endif
-    }()
-    
-    print("Finish executing \(gameList!.games.game.count) games in \(String(format: "%.2f", elapsedTime)) seconds.")
+//    print("Finish executing \(gameList!.games.game.count) games in \(String(format: "%.2f", elapsedTime)) seconds.")
   }
 }
