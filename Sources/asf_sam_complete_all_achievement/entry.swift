@@ -1,6 +1,5 @@
 import ArgumentParser
 import Foundation
-import XMLCoder
 
 #if canImport(FoundationNetworking)
 import FoundationNetworking
@@ -15,162 +14,99 @@ import FoundationNetworking
 
 @main
 struct Main: ParsableCommand {
-  @Option
+  @Option(
+    name: NameSpecification.shortAndLong,
+    help: ArgumentHelp("ASF bot name", discussion: "", valueName: "string", shouldDisplay: true)
+  )
   var botName: String
   
-  @Option
+  @Option(
+    help: ArgumentHelp(
+      "IP where ASF is hosted(with http protocol)",
+      discussion: "only supply this if you run your ASF on a server or docker.Learn more https://github.com/JustArchiNET/ArchiSteamFarm/wiki/IPC",
+      valueName: "http://127.0.0.1",
+      shouldDisplay: true
+    )
+  )
+  var ipcServer: String = "http://127.0.0.1"
+  
+  @Option(
+    help: ArgumentHelp(
+      "Password for IPC",
+      discussion: "ASF by default doesn't use any password for IPC, but if you do, you need to supply it here.Learn more https://github.com/JustArchiNET/ArchiSteamFarm/wiki/IPC#authentication",
+      valueName: "password",
+      shouldDisplay: true
+    )
+  )
   var ipcPassword: String?
   
-  @Option
-  var ipcServer: String!
+  @Option(
+    help: ArgumentHelp(
+      "Port for IPC",
+      discussion: "ASF use 1242 by default, if you use custom port forwarding on your server or docker, you need to supply it here",
+      valueName: "1242",
+      shouldDisplay: true
+    )
+  )
+  var ipcPort: Int = 1242
   
-  @Option
-  var ipcPort: Int!
+  @Option(
+    help: ArgumentHelp(
+      "How often to execute the task",
+      discussion: "how often to check the check and complete all achievement. if you don't want to check it periodically, set it to 0",
+      valueName: "12",
+      shouldDisplay: true
+    )
+  )
+  var executionInterval: Int = 12
   
   mutating func validate() throws {
-    if ipcPort == nil {
-      ipcPort = 1242
-    }
-    
-    if ipcServer == nil || ipcServer == "localhost" {
-      ipcServer = "127.0.0.1"
+    if ipcServer.isEmpty || ipcServer.lowercased().contains("localhost") {
+      ipcServer = "http://127.0.0.1"
     }
   }
   
+  /**
+   need to wait for swift-argument-parser to support executing `run()` with async
+   */
   @available(macOS 12.0.0, *)
-  func run() async throws {
-//    let (data, response) = try await URLSession.shared.data(from: url)
-//    let decoder = XMLDecoder()
-//
-//    do {
-//      let note = try decoder.decode(GamesList.self, from: data)
-//      print(">>>", note)
-//    } catch {
-//      print(">>>", error)
-//    }
+  func execute() async throws {
+//    let steamId = try await getSteamId()
+//    let gameList = try await getGameList(steamId: steamId)
+//    let commands = gameList.games.game.map { "aset \(botName) \($0.appId) *" }
+//    await withThrowingTaskGroup(of: Void.self, body: { group in
+//      for command in commands {
+//        group.addTask {
+//          let result = try await executeCommandToASF(command: command)
+//          print(result)
+//        }
+//      }
+//    })
   }
   
   func run() throws {
-    let groupDispatch = DispatchGroup()
-    var steamId: String?
-    var gameList: GamesList?
+    // confirmation
+    print("Botname:", botName)
+    print("IPC server:", ipcServer)
+    print("IPC port:", ipcPort)
+    print("IPC password: \(ipcPassword == nil ? "null" : "supplied")")
     
-    // fetch steam id from asf bot
-    groupDispatch.enter()
-    getSteamId(botName: botName, ipcPassword: ipcPassword) { result in
-      steamId = result
-      print("steam id fetched")
-      groupDispatch.leave()
-    }
-    groupDispatch.wait()
-    
-    // fetch account game list from steam
-    groupDispatch.enter()
-    guard let _steamId = steamId else { Darwin.exit(1) }
-    getGameList(steamId: _steamId) { list in
-      gameList = list
-      print("gamelist fetched")
-      groupDispatch.leave()
-    }
-    groupDispatch.wait()
-    
-    // communicate with asf, to execute command
-    groupDispatch.enter()
-    guard let _gameList = gameList else { Darwin.exit(1) }
-    let commands = _gameList.games.game.map { "aset \(botName) \($0.appId) *" }
-    let executeCommandGroupDispatch = DispatchGroup()
-    // execute each command by queue
-    commands.forEach { command in
-      executeCommandGroupDispatch.enter()
-      executeCommandToASF(command: command) { result in
-        print(result)
-        executeCommandGroupDispatch.leave()
-      }
-      executeCommandGroupDispatch.wait()
-    }
-    groupDispatch.leave()
-    groupDispatch.wait()
-    Darwin.exit(0)
-  }
-  
-  func createUrlRequest(url: URL) -> URLRequest {
-    var urlRequest = URLRequest(url: url)
-    urlRequest.setValue("application/json", forHTTPHeaderField: "accept")
-    urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    
-    // if call outside localhost
-    if let ipcPassword = ipcPassword {
-      urlRequest.setValue(ipcPassword, forHTTPHeaderField: "Authentication")
+    // execution
+    guard executionInterval != 0 else {
+      print("Execution: run once only")
+      Task.completeAllAchievement(ipcServer: ipcServer, ipcPassword: ipcPassword, ipcPort: ipcPort, botName: botName)
+      return
     }
     
-    return urlRequest
-  }
-  
-  func getSteamId(botName: String, ipcPassword: String? = nil, completion: @escaping (String) -> Void) {
-    let url = URL(string: "http://\(ipcServer!):\(ipcPort!)/Api/Bot/\(botName)")!
-    var urlRequest = createUrlRequest(url: url)
-    urlRequest.httpMethod = "GET"
+    print("Execution: periodically every \(executionInterval) hour(s)")
+    Task.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(executionInterval * 60 * 360), repeats: true, block: { _ in
+      Task.completeAllAchievement(ipcServer: ipcServer, ipcPassword: ipcPassword, ipcPort: ipcPort, botName: botName)
+    })
     
-    URLSession.shared.dataTask(with: urlRequest) { [completion] (data, response, error) in
-      guard let data = data else { return }
-      
-      do {
-        // use serialization as one of the json object is the botname
-        let serialization = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-        let result = serialization?["Result"] as? [String: Any]
-        let botData = result?[botName] as? [String: Any]
-        guard let steamId = botData?["s_SteamID"] as? String else {
-          Darwin.exit(1)
-        }
-        
-        completion(steamId)
-      } catch {
-        print(error)
-        Darwin.exit(1)
-      }
-    }.resume()
-  }
-  
-  func getGameList(steamId: String, completion: @escaping (GamesList) -> Void) {
-    let url = URL(string: "https://steamcommunity.com/profiles/\(steamId)/games?tab=all&xml=1")!
-    URLSession.shared.dataTask(with: url) { [completion] (data, response, error) in
-      guard let data = data else { return }
-      let decoder = XMLDecoder()
-      
-      do {
-        let list = try decoder.decode(GamesList.self, from: data)
-        completion(list)
-      } catch {
-        print(error)
-        Darwin.exit(1)
-      }
-    }.resume()
-  }
-  
-  func executeCommandToASF(command: String, completion: @escaping (String) -> Void) {
-    let session = URLSession(configuration: .default)
-    let url = URL(string: "http://\(ipcServer!):\(ipcPort!)/Api/Command")!
-    var urlRequest = createUrlRequest(url: url)
-    urlRequest.httpMethod = "POST"
-    urlRequest.httpBody = {
-      """
-      {
-        "Command": "\(command)"
-      }
-      """.data(using: .utf8)!
-    }()
+    // start
+    Task.timer.fire()
     
-    session.dataTask(with: urlRequest) { [completion] (data, response, error) in
-      guard let data = data else { return }
-      do {
-        // use serialization as one of the json object is the botname
-        let serialization = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-        let result = serialization?["Result"] as? String
-        completion(result ?? "empty")
-      } catch {
-        print(error)
-        Darwin.exit(1)
-      }
-    }.resume()
+    // run indefinitely
+    RunLoop.main.run()
   }
 }
