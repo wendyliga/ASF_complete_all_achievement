@@ -33,7 +33,7 @@ enum Steam {
       }
     }.resume()
   }
-  
+  #if os(macOS)
   @available(macOS 12.0.0, *)
   static func getGameList(steamId: String) async throws -> GamesList {
     let url = getGameListUrl(for: steamId)!
@@ -42,6 +42,7 @@ enum Steam {
     let decoder = XMLDecoder()
     return try decoder.decode(GamesList.self, from: data)
   }
+  #endif
 }
 
 extension Steam {

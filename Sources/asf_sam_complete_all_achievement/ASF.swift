@@ -77,6 +77,7 @@ extension ASF {
     }.resume()
   }
   
+  #if os(macOS)
   @available(macOS 12.0.0, *)
   func getSteamId() async throws -> String {
     var urlRequest = createUrlRequest(url: botInfoUrl)
@@ -102,6 +103,7 @@ extension ASF {
     
     return steamId
   }
+  #endif
   
   func executeCommandToASF(command: String, completion: @escaping (Result<String, ASF.Error>) -> Void) {
     var urlRequest = createUrlRequest(url: botCommandUrl)
@@ -143,6 +145,7 @@ extension ASF {
     }.resume()
   }
   
+  #if os(macOS)
   @available(macOS 12.0.0, *)
   func executeCommandToASF(command: String) async throws -> String {
     var urlRequest = createUrlRequest(url: botCommandUrl)
@@ -166,6 +169,7 @@ extension ASF {
     
     return result
   }
+  #endif
 }
 
 extension ASF {
