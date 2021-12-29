@@ -11,12 +11,16 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/MaxDesiatov/XMLCoder.git", from: "0.13.1"),
     .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0"),
+    .package(url: "https://github.com/wendyliga/SwiftKit.git", from: "2.0.0"),
+    .package(url: "https://github.com/kylef/PathKit", from: "1.0.0"),
   ],
   targets: [
     .executableTarget(
       name: "asf_sam_complete_all_achievement",
       dependencies: [
         "XMLCoder",
+        "SwiftKit",
+        "PathKit",
         .product(name: "ArgumentParser", package: "swift-argument-parser")
       ]),
   ]

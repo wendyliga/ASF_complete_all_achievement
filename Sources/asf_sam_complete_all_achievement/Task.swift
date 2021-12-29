@@ -1,11 +1,5 @@
 import Foundation
 
-#if os(Linux)
-    import Glibc
-#else
-    import Darwin
-#endif
-
 enum Task {
   // timer to handle all task
   static var timer = Timer(fire: Date(), interval: 1, repeats: false, block: {_ in})
@@ -13,7 +7,7 @@ enum Task {
   static func completeAllAchievement(
     ipcServer: String,
     ipcPassword: String?,
-    ipcPort: Int,
+    ipcPort: String,
     botName: String
   ) {
     var startTime = timespec()

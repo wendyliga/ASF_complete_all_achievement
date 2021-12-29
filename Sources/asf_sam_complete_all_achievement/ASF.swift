@@ -5,10 +5,13 @@ import FoundationNetworking
 #endif
 
 struct ASF {
-  internal let ipcServer: String
-  internal let ipcPassword: String?
-  internal let ipcPort: Int
-  internal let botName: String
+  static let defaultIpcServer: String = "http://127.0.0.1"
+  static let defaultIpcPort: String = "1242"
+  
+  let ipcServer: String
+  let ipcPassword: String?
+  let ipcPort: String
+  let botName: String
   
   private let session = URLSession(configuration: .default)
   
