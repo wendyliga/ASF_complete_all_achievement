@@ -5,9 +5,7 @@
             "request": "launch",
             "name": "Debug asf_sam_complete_all_achievement",
             "program": "${workspaceFolder}/.build/debug/asf_sam_complete_all_achievement",
-            "args": [
-                
-            ],
+            "args": [],
             "cwd": "${workspaceFolder:ASF_complete_all_achievement}",
             "preLaunchTask": "swift: Build Debug asf_sam_complete_all_achievement"
         },
@@ -19,6 +17,24 @@
             "args": [],
             "cwd": "${workspaceFolder:ASF_complete_all_achievement}",
             "preLaunchTask": "swift: Build Release asf_sam_complete_all_achievement"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug wrangler",
+            "program": "${workspaceFolder}/.build/debug/wrangler",
+            "args": [],
+            "cwd": "${workspaceFolder:wrangler}",
+            "preLaunchTask": "swift: Build Debug wrangler"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Release wrangler",
+            "program": "${workspaceFolder}/.build/release/wrangler",
+            "args": [],
+            "cwd": "${workspaceFolder:wrangler}",
+            "preLaunchTask": "swift: Build Release wrangler"
         }
     ]
 }

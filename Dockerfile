@@ -1,9 +1,11 @@
-FROM swift:5.5
-
+FROM swift:5.5-focal as builder
 WORKDIR /app
+COPY . .
+RUN mkdir -p /build/lib && cp -R /usr/lib/swift/linux/*.so* /build/lib
+RUN swift build -c release && mv `swift build -c release --show-bin-path` /build/bin
 
-# build everything with optimizations
-RUN swift build -c release
-
-# copy the executable to the /app directory
-RUN cp "$(swift build --package-path .build -c release --show-bin-path)/" /app
+FROM swift:5.5-focal-slim
+LABEL maintainer="me@wendyliga.com"
+WORKDIR /app
+COPY --from=builder /build/bin/wrangler .
+CMD [ "./wrangler" ]
