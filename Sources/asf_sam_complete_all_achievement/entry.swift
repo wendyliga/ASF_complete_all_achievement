@@ -14,11 +14,10 @@ import FoundationNetworking
 
 @main
 struct Main: ParsableCommand {
-  @Option(
-    name: NameSpecification.shortAndLong,
-    help: ArgumentHelp("ASF bot name", discussion: "", valueName: "string", shouldDisplay: true)
+  @Argument(
+    help: ArgumentHelp("ASF bot names", discussion: "", valueName: "string", shouldDisplay: true)
   )
-  var botName: String
+  var botNames: [String]
   
   @Option(
     help: ArgumentHelp(
@@ -85,22 +84,25 @@ struct Main: ParsableCommand {
   }
   
   func run() throws {
-    // confirmation
-    print("Botname:", botName)
-    print("IPC server:", ipcServer)
-    print("IPC port:", ipcPort)
-    print("IPC password: \(ipcPassword == nil ? "null" : "supplied")")
-    
     // execution
     guard executionInterval != 0 else {
       print("Execution: run once only")
-      Task.completeAllAchievement(ipcServer: ipcServer, ipcPassword: ipcPassword, ipcPort: ipcPort, botName: botName)
+
+      for botName in botNames {
+        Task.completeAllAchievement(ipcServer: ipcServer, ipcPassword: ipcPassword, ipcPort: ipcPort, botName: botName)
+      }
+
+      print("Finish.")
       return
     }
     
     print("Execution: periodically every \(executionInterval) hour(s)")
     Task.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(executionInterval * 60 * 360), repeats: true, block: { _ in
-      Task.completeAllAchievement(ipcServer: ipcServer, ipcPassword: ipcPassword, ipcPort: ipcPort, botName: botName)
+      for botName in botNames {
+        Task.completeAllAchievement(ipcServer: ipcServer, ipcPassword: ipcPassword, ipcPort: ipcPort, botName: botName)
+      }
+
+      print("Sleeping, waiting for next cycle")
     })
     
     // start

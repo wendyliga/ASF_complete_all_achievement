@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug asf_sam_complete_all_achievement",
+            "program": "${workspaceFolder}/.build/debug/asf_sam_complete_all_achievement",
+            "args": [
+                
+            ],
+            "cwd": "${workspaceFolder:ASF_complete_all_achievement}",
+            "preLaunchTask": "swift: Build Debug asf_sam_complete_all_achievement"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Release asf_sam_complete_all_achievement",
+            "program": "${workspaceFolder}/.build/release/asf_sam_complete_all_achievement",
+            "args": [],
+            "cwd": "${workspaceFolder:ASF_complete_all_achievement}",
+            "preLaunchTask": "swift: Build Release asf_sam_complete_all_achievement"
+        }
+    ]
+}

@@ -16,6 +16,12 @@ enum Task {
     ipcPort: Int,
     botName: String
   ) {
+    // confirmation
+    print("Botname:", botName)
+    print("IPC server:", ipcServer)
+    print("IPC port:", ipcPort)
+    print("IPC password: \(ipcPassword == nil ? "null" : "supplied")")
+
 //    let startTime = {
 //      #if os(Linux)
 //      return clock_gettime_nsec_np(CLOCK_MONOTONIC)
