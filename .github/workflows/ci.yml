@@ -13,9 +13,7 @@ jobs:
     strategy:
       matrix:
         xcode:
-          - '11.7'
-          - '12.5.1'
-          - '13.0'
+          - '13.2'
     runs-on: macos-11
     steps:
       - uses: actions/checkout@v2
@@ -28,7 +26,6 @@ jobs:
     strategy:
       matrix:
         swift-version:
-          - "5.4.2"
           - "5.5"
     steps:
       - uses: actions/checkout@v2
@@ -40,9 +37,6 @@ jobs:
     strategy:
       matrix:
         swift:
-          - swift:5.2-focal
-          - swift:5.3-focal
-          - swift:5.4-focal
           - swift:5.5-focal
     container: 
       image: ${{ matrix.swift }}
