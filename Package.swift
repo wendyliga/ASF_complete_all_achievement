@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "asf_sam_complete_all_achievement",
+  name: "wrangler",
   platforms: [
     .macOS(.v10_15),
   ],
@@ -16,7 +16,7 @@ let package = Package(
   ],
   targets: [
     .executableTarget(
-      name: "asf_sam_complete_all_achievement",
+      name: "wrangler",
       dependencies: [
         "XMLCoder",
         "SwiftKit",
