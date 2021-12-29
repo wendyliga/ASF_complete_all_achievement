@@ -16,19 +16,14 @@ enum Task {
     ipcPort: Int,
     botName: String
   ) {
+    var startTime = timespec()
+    clock_gettime(CLOCK_MONOTONIC, &startTime)
+    
     // confirmation
     print("Botname:", botName)
     print("IPC server:", ipcServer)
     print("IPC port:", ipcPort)
     print("IPC password: \(ipcPassword == nil ? "null" : "supplied")")
-
-//    let startTime = {
-//      #if os(Linux)
-//      return clock_gettime_nsec_np(CLOCK_MONOTONIC)
-//      #else
-//      return CFAbsoluteTimeGetCurrent()
-//      #endif
-//    }()
     
     let groupDispatch = DispatchGroup()
     var steamId: String?
@@ -96,24 +91,11 @@ enum Task {
     groupDispatch.leave()
     
     // calculating elapsed time
-//    let finishTime = {
-//      #if os(Linux)
-//      return clock_gettime_nsec_np(CLOCK_MONOTONIC)
-//      #else
-//      return CFAbsoluteTimeGetCurrent()
-//      #endif
-//    }()
-//
-//    print()
-//
-//    let elapsedTime = {
-//      #if os(Linux)
-//      return (finishTime-startTime)/1000000000 // clock_gettime_nsec_np record time in nano second
-//      #else
-//      return finishTime-startTime // record CFAbsoluteTimeGetCurrent time in second
-//      #endif
-//    }()
-    
-//    print("Finish executing \(gameList!.games.game.count) games in \(String(format: "%.2f", elapsedTime)) seconds.")
+    var finishTime = timespec()
+    clock_gettime(CLOCK_MONOTONIC, &finishTime)
+    let elapsedTime = Double(finishTime.tv_sec-startTime.tv_sec) + Double((finishTime.tv_nsec-startTime.tv_nsec)/1000000000)
+    print("Finish executing \(gameList!.games.game.count) games in \(String(format: "%.2f", elapsedTime)) seconds.")
   }
+  
+//https://gist.githubusercontent.com/C4illin/e8c5cf365d816f2640242bf01d8d3675/raw/9c64ec3e1c614856e444e69a7b9d4a70dfc6a76f/Steam%2520Codes
 }

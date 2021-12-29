@@ -18,7 +18,7 @@ struct Main: ParsableCommand {
     help: ArgumentHelp("ASF bot names", discussion: "", valueName: "string", shouldDisplay: true)
   )
   var botNames: [String]
-  
+
   @Option(
     help: ArgumentHelp(
       "IP where ASF is hosted(with http protocol)",
@@ -28,7 +28,7 @@ struct Main: ParsableCommand {
     )
   )
   var ipcServer: String = "http://127.0.0.1"
-  
+
   @Option(
     help: ArgumentHelp(
       "Password for IPC",
@@ -38,7 +38,7 @@ struct Main: ParsableCommand {
     )
   )
   var ipcPassword: String?
-  
+
   @Option(
     help: ArgumentHelp(
       "Port for IPC",
@@ -48,7 +48,7 @@ struct Main: ParsableCommand {
     )
   )
   var ipcPort: Int = 1242
-  
+
   @Option(
     help: ArgumentHelp(
       "How often to execute the task",
@@ -58,7 +58,7 @@ struct Main: ParsableCommand {
     )
   )
   var executionInterval: Int = 12
-  
+
   mutating func validate() throws {
     if ipcServer.isEmpty || ipcServer.lowercased().contains("localhost") {
       ipcServer = "http://127.0.0.1"
@@ -95,7 +95,7 @@ struct Main: ParsableCommand {
       print("Finish.")
       return
     }
-    
+
     print("Execution: periodically every \(executionInterval) hour(s)")
     Task.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(executionInterval * 60 * 360), repeats: true, block: { _ in
       for botName in botNames {
@@ -104,10 +104,10 @@ struct Main: ParsableCommand {
 
       print("Sleeping, waiting for next cycle")
     })
-    
+
     // start
     Task.timer.fire()
-    
+
     // run indefinitely
     RunLoop.main.run()
   }

@@ -6,13 +6,15 @@ import FoundationNetworking
 #endif
 
 enum Steam {
+  private static let session = URLSession(configuration: .default)
+
   private static func getGameListUrl(for steamId: String) -> URL? {
     URL(string: "https://steamcommunity.com/profiles/\(steamId)/games?tab=all&xml=1")
   }
   
   static func getGameList(steamId: String, completion: @escaping (Result<GamesList, Steam.Error>) -> Void) {
     let url = getGameListUrl(for: steamId)!
-    URLSession.shared.dataTask(with: url) { [completion] (data, response, error) in
+    session.dataTask(with: url) { [completion] (data, response, error) in
       if let error = error {
         completion(.failure(.invalidGameList(detail: error.localizedDescription)))
         return
@@ -38,7 +40,7 @@ enum Steam {
   static func getGameList(steamId: String) async throws -> GamesList {
     let url = getGameListUrl(for: steamId)!
     
-    let (data,_) = try await URLSession.shared.data(from: url)
+    let (data,_) = try await session.data(from: url)
     let decoder = XMLDecoder()
     return try decoder.decode(GamesList.self, from: data)
   }

@@ -10,6 +10,8 @@ struct ASF {
   internal let ipcPort: Int
   internal let botName: String
   
+  private let session = URLSession(configuration: .default)
+  
   var botInfoUrl: URL! {
     URL(string: "\(ipcServer):\(ipcPort)/Api/Bot/\(botName)")!
   }
@@ -37,7 +39,7 @@ extension ASF {
     var urlRequest = createUrlRequest(url: botInfoUrl)
     urlRequest.httpMethod = "GET"
     
-    URLSession.shared.dataTask(with: urlRequest) { [completion] (data, response, error) in
+    session.dataTask(with: urlRequest) { [completion] (data, response, error) in
       if let error = error {
         completion(.failure(.invalidBotInfoResponse(detail: error.localizedDescription)))
         return
@@ -83,7 +85,7 @@ extension ASF {
     var urlRequest = createUrlRequest(url: botInfoUrl)
     urlRequest.httpMethod = "GET"
     
-    let (data,_) = try await URLSession.shared.data(for: urlRequest)
+    let (data,_) = try await session.data(for: urlRequest)
     
     guard let serialization = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
       throw ASF.Error.invalidBotInfoResponse(detail: "fail initialize json serialization")
@@ -116,7 +118,7 @@ extension ASF {
       """.data(using: .utf8)!
     }()
     
-    URLSession.shared.dataTask(with: urlRequest) { [completion] (data, response, error) in
+    session.dataTask(with: urlRequest) { [completion] (data, response, error) in
       if let error = error {
         completion(.failure(.invalidBotExecutionResponse(detail: error.localizedDescription)))
         return
@@ -158,7 +160,7 @@ extension ASF {
       """.data(using: .utf8)!
     }()
     
-    let (data,_) = try await URLSession.shared.data(for: urlRequest)
+    let (data,_) = try await session.data(for: urlRequest)
     guard let serialization = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
       throw ASF.Error.invalidBotExecutionResponse(detail: "fail initialize json serialization")
     }
