@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  macOS:
+    strategy:
+      matrix:
+        xcode:
+          - '11.7'
+          - '12.5.1'
+          - '13.0'
+    runs-on: macos-11
+    steps:
+      - uses: actions/checkout@v2
+      - name: Select Xcode ${{ matrix.xcode }}
+        run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
+      - name: Build
+        run: swift build -c release 2>&1 | xcpretty
+  windows:
+    runs-on: windows-2019
+    strategy:
+      matrix:
+        swift-version:
+          - "5.4.2"
+          - "5.5"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: MaxDesiatov/swift-windows-action@v1
+        with:
+          shell-action: swift build -c release
+          swift-version: ${{ matrix.swift-version }}
+  linux:
+    strategy:
+      matrix:
+        swift:
+          - swift:5.2-focal
+          - swift:5.3-focal
+          - swift:5.4-focal
+          - swift:5.5-focal
+    container: 
+      image: ${{ matrix.swift }}
+      options: --cap-add=SYS_PTRACE --security-opt seccomp=unconfined --security-opt apparmor=unconfined
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: swift build
