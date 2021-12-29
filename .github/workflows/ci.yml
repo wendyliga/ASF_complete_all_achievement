@@ -21,18 +21,6 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
       - name: Build
         run: swift build -c release
-  windows:
-    runs-on: windows-2019
-    strategy:
-      matrix:
-        swift-version:
-          - "5.5"
-    steps:
-      - uses: actions/checkout@v2
-      - uses: MaxDesiatov/swift-windows-action@v1
-        with:
-          shell-action: swift build -c release
-          swift-version: ${{ matrix.swift-version }}
   linux:
     strategy:
       matrix:
