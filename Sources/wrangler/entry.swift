@@ -1,6 +1,10 @@
 import ArgumentParser
 import Foundation
+
+// disable pathkit on windows as there're no any windows equivalent of `glob` used on pathkit
+#if !os(Windows)
 import PathKit
+#endif
 
 #if canImport(FoundationNetworking)
 import FoundationNetworking
@@ -9,6 +13,7 @@ import FoundationNetworking
 @main
 struct Entry {
     static func main() {
+        #if !os(Windows)
         // check if user use config.conf as set up source
         syntesize_argument_from_config_file: do {
             let confPath = Path.current + Path("config.conf")
@@ -42,8 +47,9 @@ struct Entry {
                 }
             }
         }
+        #endif
             
-            // read from environment
+        // read from environment
         syntesize_argument_from_environment: do {
             if let botNames = ProcessInfo.processInfo.environment["BOT_NAMES"] {
                 let botNames = botNames.split(separator: ",").map(String.init)
