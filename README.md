@@ -2,7 +2,7 @@
 # Wrangle
 
 <div align="center">
-<img src="assets/wrangle.png">
+<img src="https://raw.githubusercontent.com/wendyliga/wrangler/main/assets/wrangle.png">
 </div>
 <br>
 <p align="center">
@@ -28,7 +28,7 @@
 - [ASF-Achievement-Manager](https://github.com/Ryzhehvost/ASF-Achievement-Manager) v0.2.0.0 or newer
 
 # Installation
-![wrangler](assets/preview2.png)
+![wrangler](https://raw.githubusercontent.com/wendyliga/wrangler/main/assets/preview2.png)
 ## MacOS & Linux
 - Download `wrangler-darwin-universal` from latest [Release](https://github.com/wendyliga/wrangler/releases)
 - execute it on terminal
@@ -65,7 +65,7 @@ OPTIONS:
 you can also use `config.json` by placing it beside `wrangler`, or use environment like docker below.
 
 ## Docker
-![docker](assets/preview.png)
+![docker](https://raw.githubusercontent.com/wendyliga/wrangler/main/assets/preview.png)
 ### Tags
 `latest`
 ---
