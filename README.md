@@ -4,9 +4,7 @@
 <div align="center">
 <img src="assets/wrangle.png">
 </div>
-
-
----
+<br>
 <p align="center">
     <a href="https://github.com/wendyliga/wrangler/actions/workflows/ci.yml">
         <img src="https://github.com/wendyliga/wrangler/actions/workflows/ci.yml/badge.svg" alt="CI" />
@@ -24,9 +22,6 @@
         <img src="https://img.shields.io/badge/contact-@wendyliga-blue.svg?style=flat" alt="Twitter: @wendyliga" />
     </a>
 </p>
-
----
-ArchiSteamFarm helper to complete all achievement on library and Claim free game.
 
 # Requirement
 - [ArchiSteamFarm](https://github.com/JustArchiNET/ArchiSteamFarm) v5.1.2.4 or newer
