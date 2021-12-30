@@ -30,12 +30,12 @@
 # Installation
 ![wrangler](https://raw.githubusercontent.com/wendyliga/wrangler/main/assets/preview2.png)
 ## MacOS & Linux
-- Download `wrangler-darwin-universal` from latest [Release](https://github.com/wendyliga/wrangler/releases)
+- Download `wrangler` from latest [Release](https://github.com/wendyliga/wrangler/releases)
 - execute it on terminal
 
 ```bash
 # cd ~/Download
-./wrangler-darwin-universal --help
+./wrangler --help
 ```
 
 more parameter
