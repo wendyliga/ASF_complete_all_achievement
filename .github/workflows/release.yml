@@ -17,7 +17,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
   release:
-    name: Release
+    name: Upload Darwin Binary
     runs-on: macos-11
     steps:
       - name: Checkout
@@ -25,7 +25,7 @@ jobs:
       - name: Build
         run: swift build -c release --arch x86_64 --arch arm64
       - name: Set output
-        run: echo "BIN_DIR=${swift build -c release --arch x86_64 --arch arm64 --show-bin-path}" >> $GITHUB_ENV
+        run: echo "BIN_DIR=$(swift build -c release --arch x86_64 --arch arm64 --show-bin-path)" >> $GITHUB_ENV
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
