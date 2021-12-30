@@ -1,6 +1,10 @@
 import ArgumentParser
 import Foundation
+
+// disable pathkit on windows as there're no any windows equivalent of `glob` used on pathkit
+#if !os(Windows)
 import PathKit
+#endif
 
 #if canImport(FoundationNetworking)
 import FoundationNetworking
@@ -9,6 +13,7 @@ import FoundationNetworking
 @main
 struct Entry {
     static func main() {
+        #if !os(Windows)
         // check if user use config.conf as set up source
         syntesize_argument_from_config_file: do {
             let confPath = Path.current + Path("config.conf")
@@ -31,14 +36,19 @@ struct Entry {
                         arguments.append(contentsOf: ["--ipc-password", password])
                     }
                     
+                    if conf.claimFreeGame {
+                        arguments.append("--claim-free-game")
+                    }
+                    
                     // programatically synthesize argument based on conf file
                     CommandLine.arguments.append(contentsOf: arguments)
                 } catch {
-                    print(error)
+                    Log.error(error)
                 }
             }
         }
-        
+        #endif
+            
         // read from environment
         syntesize_argument_from_environment: do {
             if let botNames = ProcessInfo.processInfo.environment["BOT_NAMES"] {
@@ -60,6 +70,10 @@ struct Entry {
             
             if let executionInterval = ProcessInfo.processInfo.environment["EXECUTION_INTERVAL"] {
                 CommandLine.arguments.append(contentsOf: ["--execution-interval", executionInterval])
+            }
+            
+            if let claimFreeGame = ProcessInfo.processInfo.environment["CLAIM_FREE_GAME"], claimFreeGame.lowercased() == "true" {
+                CommandLine.arguments.append("--claim-free-game")
             }
         }
         
@@ -108,11 +122,14 @@ struct Main: ParsableCommand {
         help: ArgumentHelp(
             "How often to execute the task",
             discussion: "how often to check the check and complete all achievement. if you don't want to check it periodically, set it to 0",
-            valueName: "12",
+            valueName: "24",
             shouldDisplay: true
         )
     )
-    var executionInterval: Int = 12
+    var executionInterval: Int = 24
+    
+    @Flag(help: "Use this flag to automatically claim free game from https://gist.githubusercontent.com/C4illin/e8c5cf365d816f2640242bf01d8d3675/raw/9c64ec3e1c614856e444e69a7b9d4a70dfc6a76f/Steam%2520Codes")
+    var claimFreeGame: Bool = false
     
     mutating func validate() throws {
         if ipcServer.isEmpty || ipcServer.lowercased().contains("localhost") {
@@ -120,45 +137,37 @@ struct Main: ParsableCommand {
         }
     }
     
-    /**
-     need to wait for swift-argument-parser to support executing `run()` with async
-     */
-    @available(macOS 12.0.0, *)
-    func execute() async throws {
-//    let steamId = try await getSteamId()
-//    let gameList = try await getGameList(steamId: steamId)
-//    let commands = gameList.games.game.map { "aset \(botName) \($0.appId) *" }
-//    await withThrowingTaskGroup(of: Void.self, body: { group in
-//      for command in commands {
-//        group.addTask {
-//          let result = try await executeCommandToASF(command: command)
-//          print(result)
-//        }
-//      }
-//    })
-    }
-    
     func run() throws {
-        // execution
-        guard executionInterval != 0 else {
-            print("Execution: run once only")
-            
-            for botName in botNames {
-                Task.completeAllAchievement(ipcServer: ipcServer, ipcPassword: ipcPassword, ipcPort: ipcPort, botName: botName)
-            }
-            
-            print("Finish.")
-            return
-        }
+        Log.info("Botname: " + botNames.joined(separator: ", "))
+        Log.info("IPC server: " + ipcServer)
+        Log.info("IPC port: " + ipcPort)
+        Log.info("IPC password: \(ipcPassword == nil ? "null" : "supplied")")
+        Log.info("Execution: " + (executionInterval == 0 ? "run once only" : "periodically every \(executionInterval) hour(s)"))
+        Log.info("Claim Free Game: " + (claimFreeGame ? "yes" : "no"))
         
-        print("Execution: periodically every \(executionInterval) hour(s)")
-        Task.timer = Timer.scheduledTimer(withTimeInterval: TimeInterval(executionInterval * 60 * 360), repeats: true, block: { _ in
-            for botName in botNames {
-                Task.completeAllAchievement(ipcServer: ipcServer, ipcPassword: ipcPassword, ipcPort: ipcPort, botName: botName)
+        Task.timer = Timer.scheduledTimer(
+            withTimeInterval: TimeInterval(executionInterval * 60 * 360),
+            repeats: executionInterval != 0,
+            block: { _ in
+                for botName in botNames {
+                    DispatchQueue.global(qos: .background).async {
+                        Task.completeAllAchievement(ipcServer: ipcServer, ipcPassword: ipcPassword, ipcPort: ipcPort, botName: botName)
+                    }
+                    
+                    if claimFreeGame {
+                        // run it concurrently
+                        DispatchQueue.global(qos: .background).async {
+                            Task.claimFreeGame(
+                                ipcServer: ipcServer,
+                                ipcPassword: ipcPassword,
+                                ipcPort: ipcPort,
+                                botName: botName
+                            )
+                        }
+                    }
+                }
             }
-            
-            print("Sleeping, waiting for next cycle")
-        })
+        )
         
         // start
         Task.timer.fire()

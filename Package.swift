@@ -17,11 +17,21 @@ let package = Package(
   targets: [
     .executableTarget(
       name: "wrangler",
-      dependencies: [
-        "XMLCoder",
-        "SwiftKit",
-        "PathKit",
-        .product(name: "ArgumentParser", package: "swift-argument-parser")
-      ]),
+      dependencies: getDependencies()
+    ),
   ]
 )
+
+func getDependencies() -> [Target.Dependency] {
+    var deps: [Target.Dependency] = [
+      "XMLCoder",
+      "SwiftKit",
+      .product(name: "ArgumentParser", package: "swift-argument-parser")
+    ]
+    
+    #if !os(Windows)
+    deps.append("PathKit")
+    #endif
+    
+    return deps
+}
