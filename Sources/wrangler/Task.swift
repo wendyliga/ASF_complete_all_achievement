@@ -10,8 +10,10 @@ enum Task {
         ipcPort: String,
         botName: String
     ) {
+        #if !os(Windows)
         var startTime = timespec()
         clock_gettime(CLOCK_MONOTONIC, &startTime)
+        #endif
         
         let groupDispatch = DispatchGroup()
         var steamId: String?
@@ -78,11 +80,15 @@ enum Task {
         }
         groupDispatch.leave()
         
+        #if !os(Windows)
         // calculating elapsed time
         var finishTime = timespec()
         clock_gettime(CLOCK_MONOTONIC, &finishTime)
         let elapsedTime = Double(finishTime.tv_sec-startTime.tv_sec) + Double((finishTime.tv_nsec-startTime.tv_nsec)/1000000000)
         Log.info("Finish executing \(gameList!.games.game.count) games in \(String(format: "%.2f", elapsedTime)) seconds.", prefix: "\(botName) achievement")
+        #else
+        Log.info("Finish executing \(gameList!.games.game.count) games.", prefix: "\(botName) achievement")
+        #endif
     }
     
     static func claimFreeGame(
