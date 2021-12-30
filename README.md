@@ -1,5 +1,31 @@
-# wrangler
 
+# Wrangle
+
+<div align="center">
+<img src="assets/wrangle.png">
+</div>
+
+
+---
+<p align="center">
+    <a href="https://github.com/wendyliga/wrangler/actions/workflows/ci.yml">
+        <img src="https://github.com/wendyliga/wrangler/actions/workflows/ci.yml/badge.svg" alt="CI" />
+    </a>
+    <a href="https://hub.docker.com/r/wendyliga/wrangler">
+        <img src="https://img.shields.io/github/workflow/status/wendyliga/wrangler/Docker.svg?label=Docker&logo=docker&cacheSeconds=600"/>
+    </a>
+    <a href="https://github.com/wendyliga/wrangler/releases">
+        <img src="https://img.shields.io/github/v/release/wendyliga/wrangler" alt="Latest Release" />
+    </a>
+    <a href="https://github.com/wendyliga/wrangler/blob/main/LICENSE">
+        <img src="https://img.shields.io/github/license/wendyliga/wrangler.svg?label=License&logo=mit&cacheSeconds=2592000" />
+    </a>
+    <a href="https://twitter.com/wendyliga">
+        <img src="https://img.shields.io/badge/contact-@wendyliga-blue.svg?style=flat" alt="Twitter: @wendyliga" />
+    </a>
+</p>
+
+---
 ArchiSteamFarm helper to complete all achievement on library and Claim free game.
 
 # Requirement
