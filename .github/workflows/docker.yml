@@ -4,13 +4,15 @@ on:
   push:
     branches:
       - main
+    tags:
+      - '*'
   pull_request:
     branches:
       - '*'
 
 jobs:
   docker:
-    name: Build and Push
+    name: Build
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -26,12 +28,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo ${GITHUB_REF#refs/*/}
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          # push: ${{ github.ref == 'refs/heads/main' }}
-          push: true
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
             wendyliga/wrangler:latest 
             ghcr.io/wendyliga/wrangler:latest
