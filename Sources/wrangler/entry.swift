@@ -16,7 +16,7 @@ struct Entry {
         #if !os(Windows)
         // check if user use config.conf as set up source
         syntesize_argument_from_config_file: do {
-            let confPath = Path.current + Path("config.conf")
+            let confPath = Path.current + Path("config.json")
             
             if confPath.exists {
                 do {
@@ -83,6 +83,14 @@ struct Entry {
 }
 
 struct Main: ParsableCommand {
+    static var configuration: CommandConfiguration {
+        CommandConfiguration(
+            commandName: "",
+            abstract: "ArchiSteamFarm helper to complete all achievement on library and Claim free games",
+            version: version
+        )
+    }
+    
     @Argument(
         help: ArgumentHelp("ASF bot names", discussion: "", valueName: "string", shouldDisplay: true)
     )
