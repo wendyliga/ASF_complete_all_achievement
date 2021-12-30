@@ -28,14 +28,25 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: test if push tag
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: echo this is tag
-      - name: Build and push
-        id: docker_build
+      - name: Build
+        if: startsWith(github.ref, 'refs/tags/v') != true && github.ref != 'refs/heads/main'
+        uses: docker/build-push-action@v2
+
+      - name: Deploy nightly
+        if: github.ref == 'refs/heads/main'
         uses: docker/build-push-action@v2
         with:
-          push: ${{ github.ref == 'refs/heads/main' }}
+          push: true
           tags: |
-            wendyliga/wrangler:latest 
+            wendyliga/wrangler:latest
+            ghcr.io/wendyliga/wrangler:latest
+      - name: Deploy release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          tags: |
+            wendyliga/wrangler:${GITHUB_REF#refs/*/}
+            wendyliga/wrangler:latest
+            ghcr.io/wendyliga/wrangler:${GITHUB_REF#refs/*/}
             ghcr.io/wendyliga/wrangler:latest
