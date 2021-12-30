@@ -52,30 +52,30 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           body: "TBA"
-  windows:
-    name: Upload Windows Binary
-    runs-on: windows-2019
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Build
-        uses: MaxDesiatov/swift-windows-action@v1
-        with:
-          shell-action: swift build
-          swift-version: '5.5'
-      - name: Set output
-        uses: MaxDesiatov/swift-windows-action@v1
-        with:
-          shell-action: |
-            for /f "delims=" %%A in ('swift build -c release --show-bin-path') do set "BIN_DIR=%%A"
-            echo BIN_DIR >> %GITHUB_ENV%
-          swift-version: '5.5'
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ env.BIN_DIR }}/wrangler
-          asset_name: wrangler-win10
-          tag: ${{ github.ref }}
-          overwrite: true
-          body: "TBA"
+  # windows:
+  #   name: Upload Windows Binary
+  #   runs-on: windows-2019
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2
+  #     - name: Build
+  #       uses: MaxDesiatov/swift-windows-action@v1
+  #       with:
+  #         shell-action: swift build
+  #         swift-version: '5.5'
+  #     - name: Set output
+  #       uses: MaxDesiatov/swift-windows-action@v1
+  #       with:
+  #         shell-action: |
+  #           for /f "delims=" %%A in ('swift build -c release --show-bin-path') do set "BIN_DIR=%%A"
+  #           echo BIN_DIR >> %GITHUB_ENV%
+  #         swift-version: '5.5'
+  #     - name: Upload binaries to release
+  #       uses: svenstaro/upload-release-action@v2
+  #       with:
+  #         repo_token: ${{ secrets.GITHUB_TOKEN }}
+  #         file: ${{ env.BIN_DIR }}/wrangler
+  #         asset_name: wrangler-win10
+  #         tag: ${{ github.ref }}
+  #         overwrite: true
+  #         body: "TBA"
