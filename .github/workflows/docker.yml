@@ -1,3 +1,5 @@
+name: Docker
+
 on:
   push:
     branches:
@@ -7,8 +9,8 @@ on:
       - '*'
 
 jobs:
-  release:
-    name: Release
+  docker:
+    name: Build and Push
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -18,9 +20,17 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Login to Github Packages
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          push: true
-          tags: wendyliga/wrangler:latest
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: |
+            wendyliga/wrangler:latest 
+            ghcr.io/wendyliga/wrangler:latest
