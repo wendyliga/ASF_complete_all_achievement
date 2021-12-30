@@ -16,7 +16,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-  release:
+  darwin:
     name: Upload Darwin Binary
     runs-on: macos-11
     steps:
@@ -35,3 +35,43 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           body: "TBA"
+
+    linux:
+      name: Upload Linux Binary
+      runs-on: ubuntu-20.04
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: Build
+          run: swift build -c release
+        - name: Set output
+          run: echo "BIN_DIR=$(swift build -c release --show-bin-path)" >> $GITHUB_ENV
+        - name: Upload binaries to release
+          uses: svenstaro/upload-release-action@v2
+          with:
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+            file: ${{ env.BIN_DIR }}/wrangler
+            asset_name: wrangler-ubuntu-20.04
+            tag: ${{ github.ref }}
+            overwrite: true
+            body: "TBA"
+    
+    windows:
+      name: Upload Windows Binary
+      runs-on: windows-2019
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+        - name: Build
+          run: swift build -c release
+        - name: Set output
+          run: echo "BIN_DIR=$(swift build -c release --show-bin-path)" >> $GITHUB_ENV
+        - name: Upload binaries to release
+          uses: svenstaro/upload-release-action@v2
+          with:
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+            file: ${{ env.BIN_DIR }}/wrangler
+            asset_name: wrangler-win10
+            tag: ${{ github.ref }}
+            overwrite: true
+            body: "TBA"
