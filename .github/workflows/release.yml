@@ -59,9 +59,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build
-        run: swift build -c release
+        uses: MaxDesiatov/swift-windows-action@v1
+        with:
+          shell-action: swift build
+          swift-version: '5.5'
       - name: Set output
-        run: echo "BIN_DIR=$(swift build -c release --show-bin-path)" >> $GITHUB_ENV
+        uses: MaxDesiatov/swift-windows-action@v1
+        with:
+          shell-action: |
+            for /f "delims=" %%A in ('swift build -c release --show-bin-path') do set "BIN_DIR=%%A"
+            echo BIN_DIR >> %GITHUB_ENV%
+          swift-version: '5.5'
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
