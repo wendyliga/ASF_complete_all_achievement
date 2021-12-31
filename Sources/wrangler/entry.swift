@@ -143,6 +143,9 @@ struct Main: ParsableCommand {
         if ipcServer.isEmpty || ipcServer.lowercased().contains("localhost") {
             ipcServer = ASF.defaultIpcServer
         }
+        
+        // remove duplicate botname
+        botNames = Array(Set(botNames))
     }
     
     func run() throws {
