@@ -40,6 +40,10 @@ struct Entry {
                         arguments.append("--claim-free-game")
                     }
                     
+                    if conf.completeAllAchievement {
+                        arguments.append("--complete-all-achievement")
+                    }
+                    
                     // programatically synthesize argument based on conf file
                     CommandLine.arguments.append(contentsOf: arguments)
                 } catch {
@@ -74,6 +78,10 @@ struct Entry {
             
             if let claimFreeGame = ProcessInfo.processInfo.environment["CLAIM_FREE_GAME"], claimFreeGame.lowercased() == "true" {
                 CommandLine.arguments.append("--claim-free-game")
+            }
+            
+            if let claimFreeGame = ProcessInfo.processInfo.environment["COMPLETE_ALL_ACHIEVEMENT"], claimFreeGame.lowercased() == "true" {
+                CommandLine.arguments.append("--complete-all-achievement")
             }
         }
         
@@ -139,10 +147,16 @@ struct Main: ParsableCommand {
     @Flag(help: "Use this flag to automatically claim free game from https://gist.githubusercontent.com/C4illin/e8c5cf365d816f2640242bf01d8d3675/raw/9c64ec3e1c614856e444e69a7b9d4a70dfc6a76f/Steam%2520Codes")
     var claimFreeGame: Bool = false
     
+    @Flag(help: "Use this flag to automatically complete all achievement")
+    var completeAllAchievement: Bool = false
+    
     mutating func validate() throws {
         if ipcServer.isEmpty || ipcServer.lowercased().contains("localhost") {
             ipcServer = ASF.defaultIpcServer
         }
+        
+        // remove duplicate botname
+        botNames = Array(Set(botNames))
     }
     
     func run() throws {
@@ -152,14 +166,22 @@ struct Main: ParsableCommand {
         Log.info("IPC password: \(ipcPassword == nil ? "null" : "supplied")")
         Log.info("Execution: " + (executionInterval == 0 ? "run once only" : "periodically every \(executionInterval) hour(s)"))
         Log.info("Claim Free Game: " + (claimFreeGame ? "yes" : "no"))
+        Log.info("Complete All Achievement: " + (completeAllAchievement ? "yes" : "no"))
+        
+        guard claimFreeGame || completeAllAchievement else {
+            Log.error("Nothing to do, at least select either --complete-all-achievement or --claim-free-game", prefix: "wrangler")
+            return
+        }
         
         Task.timer = Timer.scheduledTimer(
             withTimeInterval: TimeInterval(executionInterval * 60 * 360),
             repeats: executionInterval != 0,
             block: { _ in
                 for botName in botNames {
-                    DispatchQueue.global(qos: .background).async {
-                        Task.completeAllAchievement(ipcServer: ipcServer, ipcPassword: ipcPassword, ipcPort: ipcPort, botName: botName)
+                    if completeAllAchievement {
+                        DispatchQueue.global(qos: .background).async {
+                            Task.completeAllAchievement(ipcServer: ipcServer, ipcPassword: ipcPassword, ipcPort: ipcPort, botName: botName)
+                        }
                     }
                     
                     if claimFreeGame {

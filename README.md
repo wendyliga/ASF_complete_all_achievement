@@ -56,8 +56,9 @@ OPTIONS:
                                     ASF use 1242 by default, if you use custom port forwarding on your server or docker, you need to supply it here
   --execution-interval <24>         How often to execute the task (default: 24)
                                     how often to check the check and complete all achievement. if you don't want to check it periodically, set it to 0
-  --claim-free-game                 Use this flag to automatically claim free game from
-                                    https://gist.githubusercontent.com/C4illin/e8c5cf365d816f2640242bf01d8d3675/raw/9c64ec3e1c614856e444e69a7b9d4a70dfc6a76f/Steam%2520Codes
+  --claim-free-game                 Use this flag to automatically claim free game from 
+                                    https://gist.githubusercontent.com/C4illin/ e8c5cf365d816f2640242bf01d8d3675/raw/9c64ec3e1c614856e444e69a7b9d4a70dfc6a76f/Steam%2520Codes
+  --complete-all-achievement       Use this flag to automatically complete all achievement
   --version                         Show the version.
   -h, --help                        Show help information.
 ```
@@ -102,6 +103,7 @@ docker run --rm --name wrangler --network host --pull always \
     -e 'IPC_PASSWORD=admin' \
     -e 'INTERVAL_IN_HOUR=24' \
     -e 'CLAIM_FREE_GAME=true' \
+    -e 'COMPLETE_ALL_ACHIEVEMENT=true' \
     wendyliga/wrangler:latest
 ```
 * you can always use `-d` to detach docker run from your terminal
@@ -131,6 +133,7 @@ services:
             # IPC_PASSWORD: 'admin' # optional, if you use one
             # INTERVAL_IN_HOUR: '24' 
             # CLAIM_FREE_GAME: 'true'
+            # COMPLETE_ALL_ACHIEVEMENT: 'true'
 ```
 
 # DISCLAIMER
