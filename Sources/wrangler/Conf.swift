@@ -8,6 +8,7 @@ struct Conf: Decodable {
     let ipcPort: String
     let intervalInHour: Int
     let claimFreeGame: Bool
+    let completeAllAchievement: Bool
     
     enum CodingKeys: String, CodingKey {
         case botNames = "bot_names"
@@ -16,6 +17,7 @@ struct Conf: Decodable {
         case ipcPort = "ipc_port"
         case intervalInHour = "interval_in_hour"
         case claimFreeGame = "claim_free_game"
+        case completeAllAchievement = "complete_all_achievement"
     }
     
     init(from decoder: Decoder) throws {
@@ -46,5 +48,6 @@ struct Conf: Decodable {
         
         self.intervalInHour = (try container.decodeIfPresent(Int.self, forKey: .intervalInHour)) ?? 24
         self.claimFreeGame = (try container.decodeIfPresent(Bool.self, forKey: .claimFreeGame)) ?? false
+        self.completeAllAchievement = (try container.decodeIfPresent(Bool.self, forKey: .completeAllAchievement)) ?? false
     }
 }
