@@ -65,7 +65,7 @@ jobs:
           swift-version: '5.5'
       - name: Prepare executable
         run: |
-          if not exist bin mkdir bin
+          md bin
           xcopy .build/release/wrangler.exe bin
       - name: Prepare dll
         run: |
