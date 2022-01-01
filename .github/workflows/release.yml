@@ -63,6 +63,7 @@ jobs:
         with:
           shell-action: swift build -c release
           swift-version: '5.5'
+      - run: dir C:\Library
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
