@@ -63,13 +63,30 @@ jobs:
         with:
           shell-action: swift build -c release
           swift-version: '5.5'
-      - run: dir C:\Library
+      - name: Prepare executable
+        run: |
+          mkdir wrangler
+          xcopy .build/release/wrangler.exe wrangler
+      - name: Prepare dll
+        run: |
+          xcopy C:\Library\icu-67\usr\bin wrangler
+          xcopy C:\Library\Swift-development\bin\BlocksRuntime.dll wrangler
+          xcopy C:\Library\Swift-development\bin\dispatch.dll wrangler
+          xcopy C:\Library\Swift-development\bin\Foundation.dll wrangler
+          xcopy C:\Library\Swift-development\bin\FoundationNetworking.dll wrangler
+          xcopy C:\Library\Swift-development\bin\FoundationXML.dll wrangler
+          xcopy C:\Library\Swift-development\bin\swiftCore.dll wrangler
+          xcopy C:\Library\Swift-development\bin\swiftCRT.dll wrangler
+          xcopy C:\Library\Swift-development\bin\swiftDispatch.dll wrangler
+          xcopy C:\Library\Swift-development\bin\swiftWinSDk.dll wrangler
+      - name: Packing
+        run: powershell Compress-Archive wrangler wrangler.zip
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: .build/release/wrangler.exe
-          asset_name: wrangler-win10_x86_64.exe
+          file: wrangler.zip
+          asset_name: wrangler-win10_x86_64.zip
           tag: ${{ github.ref }}
           overwrite: true
           body: "TBA"
