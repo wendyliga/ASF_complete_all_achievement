@@ -65,27 +65,29 @@ jobs:
           swift-version: '5.5'
       - name: Prepare executable
         run: |
-          mkdir wrangler
-          xcopy .build/release/wrangler.exe wrangler
+          if not exist bin mkdir bin
+          xcopy .build/release/wrangler.exe bin
       - name: Prepare dll
         run: |
-          xcopy C:\Library\icu-67\usr\bin wrangler
-          xcopy C:\Library\Swift-development\bin\BlocksRuntime.dll wrangler
-          xcopy C:\Library\Swift-development\bin\dispatch.dll wrangler
-          xcopy C:\Library\Swift-development\bin\Foundation.dll wrangler
-          xcopy C:\Library\Swift-development\bin\FoundationNetworking.dll wrangler
-          xcopy C:\Library\Swift-development\bin\FoundationXML.dll wrangler
-          xcopy C:\Library\Swift-development\bin\swiftCore.dll wrangler
-          xcopy C:\Library\Swift-development\bin\swiftCRT.dll wrangler
-          xcopy C:\Library\Swift-development\bin\swiftDispatch.dll wrangler
-          xcopy C:\Library\Swift-development\bin\swiftWinSDk.dll wrangler
+          xcopy C:\Library\icu-67\usr\bin\icudt67.dll bin
+          xcopy C:\Library\icu-67\usr\bin\icuin67.dll bin
+          xcopy C:\Library\icu-67\usr\bin\icuuc67.dll bin
+          xcopy C:\Library\Swift-development\bin\BlocksRuntime.dll bin
+          xcopy C:\Library\Swift-development\bin\dispatch.dll bin
+          xcopy C:\Library\Swift-development\bin\Foundation.dll bin
+          xcopy C:\Library\Swift-development\bin\FoundationNetworking.dll bin
+          xcopy C:\Library\Swift-development\bin\FoundationXML.dll bin
+          xcopy C:\Library\Swift-development\bin\swiftCore.dll bin
+          xcopy C:\Library\Swift-development\bin\swiftCRT.dll bin
+          xcopy C:\Library\Swift-development\bin\swiftDispatch.dll bin
+          xcopy C:\Library\Swift-development\bin\swiftWinSDk.dll bin
       - name: Packing
-        run: powershell Compress-Archive wrangler wrangler.zip
+        run: powershell Compress-Archive bin bin.zip
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: wrangler.zip
+          file: bin.zip
           asset_name: wrangler-win10_x86_64.zip
           tag: ${{ github.ref }}
           overwrite: true
