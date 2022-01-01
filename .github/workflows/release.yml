@@ -29,7 +29,7 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.BIN_DIR }}/wrangler
-          asset_name: wrangler-darwin-universal
+          asset_name: wrangler-darwin_arm64_x86_64
           tag: ${{ github.ref }}
           overwrite: true
           body: "TBA"
@@ -48,34 +48,27 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.BIN_DIR }}/wrangler
-          asset_name: wrangler-ubuntu-20.04
+          asset_name: wrangler-ubuntu-20.04_x86_64
           tag: ${{ github.ref }}
           overwrite: true
           body: "TBA"
-  # windows:
-  #   name: Upload Windows Binary
-  #   runs-on: windows-2019
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v2
-  #     - name: Build
-  #       uses: MaxDesiatov/swift-windows-action@v1
-  #       with:
-  #         shell-action: swift build
-  #         swift-version: '5.5'
-  #     - name: Set output
-  #       uses: MaxDesiatov/swift-windows-action@v1
-  #       with:
-  #         shell-action: |
-  #           for /f "delims=" %%A in ('swift build -c release --show-bin-path') do set "BIN_DIR=%%A"
-  #           echo BIN_DIR >> %GITHUB_ENV%
-  #         swift-version: '5.5'
-  #     - name: Upload binaries to release
-  #       uses: svenstaro/upload-release-action@v2
-  #       with:
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }}
-  #         file: ${{ env.BIN_DIR }}/wrangler
-  #         asset_name: wrangler-win10
-  #         tag: ${{ github.ref }}
-  #         overwrite: true
-  #         body: "TBA"
+  windows:
+    name: Upload Windows Binary
+    runs-on: windows-2019
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        uses: MaxDesiatov/swift-windows-action@v1
+        with:
+          shell-action: swift build -c release
+          swift-version: '5.5'
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: .build/release/wrangler.exe
+          asset_name: wrangler-win10_x86_64.exe
+          tag: ${{ github.ref }}
+          overwrite: true
+          body: "TBA"
