@@ -7,7 +7,11 @@ enum Log {
         var prefix = ""
         
         if let _prefix = _prefix {
+            #if !os(Windows)
             prefix += redANSI + _prefix + resetANSI + ": "
+            #else
+            prefix += _prefix + ": "
+            #endif
         }
         
         fputs(prefix + value + "\n", stderr)
@@ -24,7 +28,11 @@ enum Log {
         var prefix = ""
         
         if let _prefix = _prefix {
+            #if !os(Windows)
             prefix += greenANSI + _prefix + resetANSI + ": "
+            #else
+            prefix += _prefix + ": "
+            #endif
         }
         
         fputs(prefix + value + "\n", stdout)
