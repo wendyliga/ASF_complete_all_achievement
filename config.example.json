@@ -7,6 +7,6 @@
   "ipc_password": "admin",
   "ipc_port": "1242",
   "interval_in_hour": 12,
-  "complete_all_achievement": true
+  "complete_all_achievement": true,
   "claim_free_game": true
 }
