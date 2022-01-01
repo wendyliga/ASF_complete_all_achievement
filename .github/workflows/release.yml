@@ -66,23 +66,23 @@ jobs:
       - name: Prepare executable
         run: |
           md bin
-          xcopy .build/release/wrangler.exe bin
+          Copy-Item .build/release/wrangler.exe bin
       - name: Prepare dll
         run: |
-          xcopy C:\Library\icu-67\usr\bin\icudt67.dll bin
-          xcopy C:\Library\icu-67\usr\bin\icuin67.dll bin
-          xcopy C:\Library\icu-67\usr\bin\icuuc67.dll bin
-          xcopy C:\Library\Swift-development\bin\BlocksRuntime.dll bin
-          xcopy C:\Library\Swift-development\bin\dispatch.dll bin
-          xcopy C:\Library\Swift-development\bin\Foundation.dll bin
-          xcopy C:\Library\Swift-development\bin\FoundationNetworking.dll bin
-          xcopy C:\Library\Swift-development\bin\FoundationXML.dll bin
-          xcopy C:\Library\Swift-development\bin\swiftCore.dll bin
-          xcopy C:\Library\Swift-development\bin\swiftCRT.dll bin
-          xcopy C:\Library\Swift-development\bin\swiftDispatch.dll bin
-          xcopy C:\Library\Swift-development\bin\swiftWinSDk.dll bin
+          Copy-Item C:\Library\icu-67\usr\bin\icudt67.dll bin
+          Copy-Item C:\Library\icu-67\usr\bin\icuin67.dll bin
+          Copy-Item C:\Library\icu-67\usr\bin\icuuc67.dll bin
+          Copy-Item C:\Library\Swift-development\bin\BlocksRuntime.dll bin
+          Copy-Item C:\Library\Swift-development\bin\dispatch.dll bin
+          Copy-Item C:\Library\Swift-development\bin\Foundation.dll bin
+          Copy-Item C:\Library\Swift-development\bin\FoundationNetworking.dll bin
+          Copy-Item C:\Library\Swift-development\bin\FoundationXML.dll bin
+          Copy-Item C:\Library\Swift-development\bin\swiftCore.dll bin
+          Copy-Item C:\Library\Swift-development\bin\swiftCRT.dll bin
+          Copy-Item C:\Library\Swift-development\bin\swiftDispatch.dll bin
+          Copy-Item C:\Library\Swift-development\bin\swiftWinSDk.dll bin
       - name: Packing
-        run: powershell Compress-Archive bin bin.zip
+        run: Compress-Archive bin bin.zip
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
