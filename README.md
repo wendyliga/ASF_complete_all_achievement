@@ -23,9 +23,21 @@
     </a>
 </p>
 
+`wrangler` is ArchiSteamFarm helper to complete all achievement on library and Claim free games automatically and periodically (default once every 24 hours). 
+
+Working on completing all achievement, `wrangler` works by extending [ArchiSteamFarm](https://github.com/JustArchiNET/ArchiSteamFarm) & [ASF-Achievement-Manager](https://github.com/Ryzhehvost/ASF-Achievement-Manager) IPC API. `wrangler` will scan steam id on bot, and fetch all games and use [ASF-Achievement-Manager](https://github.com/Ryzhehvost/ASF-Achievement-Manager) to request complete all the achievement.
+
+On the other hand, to claim free game, `wrangler` will fetch periodically from [list](https://gist.github.com/C4illin/e8c5cf365d816f2640242bf01d8d3675) and use [ArchiSteamFarm](https://github.com/JustArchiNET/ArchiSteamFarm) API to claim the game id.
+
+`wrangler` can run on Windows, linux and macOS. You can also use docker to run `wrangler`.
+You can run wrangler in 3 ways.
+- spesifiying parameter on executable, this only works if you download the executable/binary to your computer and run it on your terminal/command promt/powershell.
+- use `config.json`, you can use this by placing `config.json` beside wrangler binary, or `/app` on docker
+- use environment, you can see docker [usage](#usage) for more detail on what environment variable exist.
+
 # Requirement
 - [ArchiSteamFarm](https://github.com/JustArchiNET/ArchiSteamFarm) v5.1.2.4 or newer
-- [ASF-Achievement-Manager](https://github.com/Ryzhehvost/ASF-Achievement-Manager) v0.2.0.0 or newer
+- [ASF-Achievement-Manager](https://github.com/Ryzhehvost/ASF-Achievement-Manager) v0.2.0.0 or newer (if you want to use complete achievement feature)
 
 # Installation
 ![wrangler](https://raw.githubusercontent.com/wendyliga/wrangler/main/assets/preview2.png)
