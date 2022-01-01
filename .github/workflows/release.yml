@@ -82,7 +82,7 @@ jobs:
           Copy-Item C:\Library\Swift-development\bin\swiftDispatch.dll bin
           Copy-Item C:\Library\Swift-development\bin\swiftWinSDk.dll bin
       - name: Packing
-        run: Compress-Archive bin bin.zip
+        run: Compress-Archive bin\* bin.zip
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
