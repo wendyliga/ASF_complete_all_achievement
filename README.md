@@ -29,6 +29,15 @@
 
 # Installation
 ![wrangler](https://raw.githubusercontent.com/wendyliga/wrangler/main/assets/preview2.png)
+
+## Windows
+- Download `wrangler-win10_x86-64.zip` from latest [Release](https://github.com/wendyliga/wrangler/releases)
+- extract it
+- open command prompt or power shell (cd to directory if neccessary) and run
+
+```powershell
+.\wrangler.exe --help
+```
 ## MacOS & Linux
 - Download `wrangler` from latest [Release](https://github.com/wendyliga/wrangler/releases)
 - execute it on terminal
