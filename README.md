@@ -9,11 +9,20 @@
     <a href="https://github.com/wendyliga/wrangler/actions/workflows/ci.yml">
         <img src="https://github.com/wendyliga/wrangler/actions/workflows/ci.yml/badge.svg" alt="CI" />
     </a>
+    <a href="https://github.com/wendyliga/wrangler/releases">
+        <img src="https://img.shields.io/github/v/release/wendyliga/wrangler" alt="Latest Release" />
+    </a>
     <a href="https://hub.docker.com/r/wendyliga/wrangler">
         <img src="https://img.shields.io/github/workflow/status/wendyliga/wrangler/Docker.svg?label=Docker&logo=docker&cacheSeconds=600"/>
     </a>
     <a href="https://github.com/wendyliga/wrangler/releases">
-        <img src="https://img.shields.io/github/v/release/wendyliga/wrangler" alt="Latest Release" />
+        <img src="https://img.shields.io/badge/Windows-available-brightgreen?logo=windows" alt="Available for Windows" />
+    </a>
+     <a href="https://github.com/wendyliga/wrangler/releases">
+        <img src="https://img.shields.io/badge/Linux-available-brightgreen?logo=linux" alt="Available for Linux" />
+    </a>
+    <a href="https://github.com/wendyliga/wrangler/releases">
+        <img src="https://img.shields.io/badge/MacOS-available-brightgreen?logo=apple" alt="Available for MacOS" />
     </a>
     <a href="https://github.com/wendyliga/wrangler/blob/main/LICENSE">
         <img src="https://img.shields.io/github/license/wendyliga/wrangler.svg?label=License&logo=mit&cacheSeconds=2592000" />
