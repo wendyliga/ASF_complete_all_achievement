@@ -40,7 +40,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Build
-        run: swift build -c release
+        run: swift build -c release -Xswiftc -static-executable
       - name: Set output
         run: echo "BIN_DIR=$(swift build -c release --show-bin-path)" >> $GITHUB_ENV
       - name: Upload binaries to release
