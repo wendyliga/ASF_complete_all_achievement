@@ -17,12 +17,23 @@ let package = Package(
   targets: [
     .executableTarget(
       name: "wrangler",
-      dependencies: getDependencies()
+      dependencies: dependencies,
+      linkerSettings: linkerSettings
     ),
   ]
 )
 
-func getDependencies() -> [Target.Dependency] {
+var linkerSettings: [LinkerSetting]? {
+  #if os(Linux)
+  return [
+    .linkedLibrary("curl")
+  ]
+  #else
+  return nil
+  #endif
+}
+
+var dependencies: [Target.Dependency] {
     var deps: [Target.Dependency] = [
       "XMLCoder",
       "SwiftKit",
