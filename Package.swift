@@ -26,7 +26,22 @@ let package = Package(
 var linkerSettings: [LinkerSetting]? {
   #if os(Linux)
   return [
-    .linkedLibrary("curl")
+    .linkedLibrary("curl"),
+    .linkedLibrary("nghttp2"),
+    .linkedLibrary("idn2"),
+    .linkedLibrary("rtmp"),
+    .linkedLibrary("psl"),
+    .linkedLibrary("ssl"),
+    .linkedLibrary("crypto"),
+    .linkedLibrary("ssl"),
+    .linkedLibrary("crypto"),
+    .linkedLibrary("gssapi_krb5"),
+    .linkedLibrary("krb5"),
+    .linkedLibrary("k5crypto"),
+    .linkedLibrary("com_err"),
+    .linkedLibrary("lber"),
+    .linkedLibrary("ldap"),
+    .linkedLibrary("z"),
   ]
   #else
   return nil
